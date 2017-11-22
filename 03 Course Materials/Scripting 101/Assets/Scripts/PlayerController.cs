@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public float speed = 5f;
-    public Rigidbody rigidbody;
+
+    private Rigidbody rigidbody;
 
 	void Start () {
         rigidbody = GetComponent<Rigidbody>();
@@ -15,9 +16,19 @@ public class PlayerController : MonoBehaviour {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector3 dir = new Vector3(horizontal, 0, vertical);
-        // transform.Translate(speed * dir * Time.deltaTime); non physics method
-    
-        rigidbody.AddForce(dir * speed);
+        Move(horizontal, vertical);
 	}
+
+    void Move(float horizontal, float vertical)
+    {
+        Vector3 dir = new Vector3(horizontal, 0, vertical);
+        //transform.Translate(speed * dir * Time.deltaTime); non physics method
+
+        rigidbody.AddForce(dir * speed);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Destroy(other.gameObject);
+    }
 }
