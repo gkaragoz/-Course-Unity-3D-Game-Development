@@ -6,9 +6,13 @@ public class PlayerController : MonoBehaviour {
 
     public float speed = 5f;
 
+    private GameManager _GM;
     private Rigidbody rigidbody;
 
 	void Start () {
+        _GM = GameObject.FindObjectOfType<GameManager>();
+        //_GM = GameObject.Find("_GAMEMANAGER").GetComponent<GameManager>();
+
         rigidbody = GetComponent<Rigidbody>();
     }
 	
@@ -30,5 +34,6 @@ public class PlayerController : MonoBehaviour {
     void OnTriggerEnter(Collider other)
     {
         Destroy(other.gameObject);
+        _GM.Score--;
     }
 }
