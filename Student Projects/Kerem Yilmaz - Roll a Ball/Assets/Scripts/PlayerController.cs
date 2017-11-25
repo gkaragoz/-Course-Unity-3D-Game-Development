@@ -9,7 +9,7 @@ using UnityEngine;
 //Şuan için bu commit'imde eksiklerini veya yorumlarımı not aldım.
 //
 
-public class TopKontrol : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
 
     //Her şeyden önce TÜRKÇE kod düzeninden uzak durmalısın.
