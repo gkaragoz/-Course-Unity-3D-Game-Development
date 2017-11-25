@@ -3,39 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-//
-//Merhaba Enes :)
-//Ödev için çok teşekkür ederim
-//Bu yorumlar bir sonraki commit'imle birlikte refactor edilmiş (düzenlenmiş) kod düzenine geçecek.
-//Şuan için bu commit'imde eksiklerini veya yorumlarımı not aldım.
-//
-
 public class PlayerController : MonoBehaviour {
 
     public Rigidbody rigidbody;
     public float speed = 10f;
 
-    //UI tanımlamarında tipi ben en başa yazmayı tercih ediyorum.
-    public Text scoreText; //txtScore
-    public Text winText;   //txtWin
-
-    //Burada bu değişken bir text'e data olarak bind edilmesi gerekiyor ki daha kolay kullanılsın. 
-    //Bind (Bağlamak)
-    //Yani data değiştiğinde -score artıp azaldığında- ilgili text UI otomatik olarak kendini güncellesin.
-    //Bunu yapmanın yoluysa encapculation'dan geçiyor.
+    private GameObject doorObj;
+    private Text txtScore;
+    private Text txtWin;
+    private int requiredGoldCount; //Hard string olarak 23. satırdaki if kontrolü için ekrandaki toplanılması gereken total puanları tutan bir değişken. Statik değil, dinamik olacağız.
     private int score;
-	void Start () {
-        rigidbody = GetComponent<Rigidbody>();
 
-        //Encapculation yapıldığında bu 3 satır kendiliğinden silinip 1 satırla, kod temizlenmiş olacak.
-        score = 0;
-        SetScoreText();
-        winText.text = "";
+    public int Score
+    {
+        get { return score; }
+        set {
+            score = value;
+            txtScore.text = "Score:" + score;
+            if (score >= requiredGoldCount)
+                txtWin.text = "You Win";
+        }
+    }
+
+
+    void Start () {
+        rigidbody = GetComponent<Rigidbody>();
+        doorObj = GameObject.Find("Door");
+        txtScore = GameObject.Find("txtScore").GetComponent<Text>();
+        txtWin = GameObject.Find("txtWin").GetComponent<Text>();
+
+        requiredGoldCount = GameObject.Find("Golds").transform.childCount;
+        Score = 0;
 	}
 
-
-	// Update is called once per frame
 	void FixedUpdate () {
         if (Input.GetKeyDown(KeyCode.Space))
             Jump();
@@ -48,16 +48,10 @@ public class PlayerController : MonoBehaviour {
     void Move(float horizontal, float vertical)
     {
         Vector3 dir = new Vector3(horizontal, 0, vertical);
-
         rigidbody.AddForce(dir * speed);
     }
 
-    //Bu fonksiyon gayet başarılı olmuş. 
-    //Şuanki öğrettiklerimle elinizden gelenin en iyisi budur.
-    //Çoğu kişi zıplamayı yaptığında havada tekrar zıplamayı iptal edemiyordur.
-    //Raycast denilen sistemi önümüzdeki ders göstereceğim zaten. 
-    //Bu işin üstesinden nasıl gelindiğini göreceksiniz.
-    //Eline sağlık :)
+    //Raycast sistemini öğrendiğimizde refactor edeceğiz.
     void Jump()
     {
         if (transform.localPosition.y == 0.5 || transform.localPosition.y == 1.5 || transform.localPosition.y == 4 || transform.localPosition.y == 5)
@@ -72,34 +66,13 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.CompareTag("Gold"))
         {
             other.gameObject.SetActive(false);
-
-            //Bak mesela, hem score++ hem SetScoreText kısmı çok çirkin değil mi sencede?
-            //İkisi de bir bakıma similar (benzer) görevleri üstleniyorlar.
-            //İkisi de score ile ilgileniyorlar.
-            //Enkapsülleyince burası da düzelecek.
-            score++;
-            SetScoreText();
+            Score++;
         }
+
         if (other.gameObject.CompareTag("Key"))
         {
             other.gameObject.SetActive(false);
-
-            //Oyun esnasında gerekmedikce Find fonksiyonlarıyla Unity'i meşgul etmek performans sorunlarına yol açar.
-            //Şuan için çok küçük bir proje olduğundan sorun olmayacaktır ancak,
-            //Bu Find ile referans alma işlemlerini Start ya da Awake fonksiyonunda gerçekleştirip,
-            //Bir değişkende saklamak lazım.
-            //RAM'i şişirip, CPU'yu olabildiğince rahatlatmak lazım.
-            Destroy(GameObject.FindWithTag("Door"));
-        }
-    }
-
-    //Burası kapsüllemenin set bölümünün içerisine gidecek.
-    void SetScoreText()
-    {
-        scoreText.text = "Score:" + score;
-        if (score >= 6)
-        {
-            winText.text = "You Win";
+            Destroy(doorObj);
         }
     }
 }
