@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("4 katli bloglari gecmek icin cift ziplama kullanabilirsin");
         rigidbody = GetComponent<Rigidbody>();
     }
 
