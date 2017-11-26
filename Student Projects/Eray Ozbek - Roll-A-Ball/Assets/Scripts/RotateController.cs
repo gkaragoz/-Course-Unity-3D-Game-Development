@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//
-//Merhaba Eray :)
-//Ödev için çok teşekkür ederim
-//Bu yorumlar bir sonraki commit'imle birlikte refactor edilmiş (düzenlenmiş) kod düzenine geçecek.
-//Şuan için bu commit'imde eksiklerini veya yorumlarımı not aldım.
-//
-
 public class RotateController : MonoBehaviour {
-	
-	// Update is called once per frame
+
+    public float rotateSpeedX = 15f;
+    public float rotateSpeedY = 30f;
+    public float rotateSpeedZ = 45f;
+
 	void Update ()
     {
-        //Bu komut için aslında bir fonksiyon yazman OOP açısından daha doğru olurdu.
-		transform.Rotate(new Vector3(15,30,45) * Time.fixedDeltaTime);
+        Rotate(this.gameObject);
 	}
+
+    void Rotate(GameObject obj)
+    {
+        Vector3 direction = new Vector3(rotateSpeedX, rotateSpeedY, rotateSpeedZ);
+        obj.transform.Rotate(direction * Time.fixedDeltaTime);
+    }
 }

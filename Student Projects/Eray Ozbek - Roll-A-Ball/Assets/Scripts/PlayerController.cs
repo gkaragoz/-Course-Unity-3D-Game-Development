@@ -4,66 +4,67 @@ using NUnit.Framework.Api;
 using UnityEngine;
 using UnityEngine.UI;
 
-//
-//Merhaba Eray :)
-//Ödev için çok teşekkür ederim
-//Bu yorumlar bir sonraki commit'imle birlikte refactor edilmiş (düzenlenmiş) kod düzenine geçecek.
-//Şuan için bu commit'imde eksiklerini veya yorumlarımı not aldım.
-//
-
 public class PlayerController : MonoBehaviour
 {
-    //UI değişkenlerinin public olmasının bu kapsamda bir mantığı yok.
-    //Sürükle bırak referans atamalarından daima kaçınmalıyız.
-    //Start ya da Awake fonksiyonun içerisinde ilgili nesneleri Find
-    //methodlarından uygun bir tanesini kullanarak nesne referanslamarımızı
-    //yapmamız daha doğru olur.
-
     public float speed = 500.0f;
-    public Text scoreText;  //Bu tip değişkenlerin isimlerini scoreText yerine 
-    //txtScore gibi önce tip, sonra isim şeklinde yapman literatüre daha uygun olabilir.
-    private int count = 0;
-    public Text WinText;
-    
+    public int Count
+    {
+        get { return count; }
+        set
+        {
+            count = value;
+            txtScore.text = "Score: " + count;
+
+            if (count >= 30)
+                ShowObject(txtWin.gameObject);
+        }
+    }
+
+    private int count;
+    private Text txtScore; 
+    private Text txtWin;
+    private Rigidbody rigidbody;
+
+    void Start()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+        txtScore = GameObject.Find("ScoreText").GetComponent<Text>();
+        txtWin = GameObject.Find("WinText").GetComponent<Text>();
+
+        HideObject(txtWin.gameObject);
+    }
+
     void FixedUpdate()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        //OOP açısından aşağıdaki 2 satır FixedUpdate'in görevi olan bir komut seti değil.
-        //Move gibi bir fonksiyonla ayrıca çağırman daha doğru olurdu.
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        Movement(moveHorizontal, moveVertical);
+    }
 
-        GetComponent<Rigidbody>().AddForce(movement * speed * Time.deltaTime);
-       
+    void Movement(float horizontal, float vertical)
+    {
+        Vector3 movement = new Vector3(horizontal, 0.0f, vertical);
+        rigidbody.AddForce(movement * speed * Time.deltaTime);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "PickUp")
         {
-            //Hide object gibi bir fonksiyon neden olmasın?
-            other.gameObject.SetActive(false);
+            HideObject(other.gameObject);
 
-            //Fark ettin mi bilmiyorum ama,
-            //Aşağıdaki iki satır da neredeyse benzer görevleri yapıyor.
-            //Yani aynı amaç için çalışıyorlar
-            //Ekranda skoru gösterebilmek!
-            //Dolayısıyla bu iki satırı tek satıra indirmenin bir yolu var.
-            //Encapculation!
-            //Datayı yani count değişkenini text UI'ına "Bind" (bağlama) edebiliriz.
-
-            count += 1;     
-            scoreText.text = "Score: " + count;
-        }
-
-        //Show text diye bir fonksiyon neden olmasın?
-        if (count >= 30) 
-        {
-            WinText.gameObject.SetActive(true);
+            Count++;
         }
     }
 
-    
+    void HideObject(GameObject obj)
+    {
+        obj.SetActive(false);
+    }
 
+    void ShowObject(GameObject obj)
+    {
+        obj.SetActive(true);
+    }
 }
