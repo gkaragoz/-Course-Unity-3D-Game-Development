@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour {
     private int _score;
     private RaycastHit _hit;
 
+    /// <summary>
+    /// Encapculation for _score variable.
+    /// </summary>
     public int Score
     {
         get { return _score; }
@@ -21,6 +24,9 @@ public class PlayerController : MonoBehaviour {
     }
     private Rigidbody _rigidbody;
     
+    /// <summary>
+    /// Get references and make initalizations.
+    /// </summary>
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -28,6 +34,9 @@ public class PlayerController : MonoBehaviour {
         Score = 0;
     }
 
+    /// <summary>
+    /// Raycast and Input controllers
+    /// </summary>
     void FixedUpdate()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -49,21 +58,31 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Jump function with hardcode 500f force.
+    /// </summary>
     void Jump()
     {
         _rigidbody.AddForce(Vector3.up * 500f);
     }
 
+    /// <summary>
+    /// Move function with AddForce. We multiplied by -1 because Camera direction.
+    /// </summary>
+    /// <param name="horizontal"></param>
+    /// <param name="vertical"></param>
     void Movement(float horizontal, float vertical)
     {
         Vector3 direction = new Vector3(horizontal, 0, vertical);
         _rigidbody.AddForce(direction * -1 * speed);
     }
 
+    /// <summary>
+    /// Check for Death and Gold triggers.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other);
-
         if (other.gameObject.name == "DEATH_TRIGGER")
             Death();
 
@@ -71,6 +90,9 @@ public class PlayerController : MonoBehaviour {
         Destroy(other.gameObject);
     }
 
+    /// <summary>
+    /// If we need to die, here is the function.
+    /// </summary>
     void Death()
     {
         Application.LoadLevel("Main");

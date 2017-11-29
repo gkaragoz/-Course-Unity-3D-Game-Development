@@ -18,11 +18,17 @@ public class RotateIt : MonoBehaviour {
         Rotate();    
     }
 
+    /// <summary>
+    /// Set random speed values.
+    /// </summary>
     void SetRandomness()
     {
         speed = Random.Range(randomMin, randomMax);
     }
 
+    /// <summary>
+    /// Rotate the object along Z axis by time.
+    /// </summary>
     void Rotate()
     {
         Vector3 direction = Vector3.forward;

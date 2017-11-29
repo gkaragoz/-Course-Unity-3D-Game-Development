@@ -17,6 +17,10 @@ public class CameraController : MonoBehaviour {
         SetCameraPosition();
 	}
 
+    /// <summary>
+    /// Setting the camera position depends on target position. 
+    /// Make sure you have offset value!
+    /// </summary>
     void SetCameraPosition()
     {
         transform.position = new Vector3(
