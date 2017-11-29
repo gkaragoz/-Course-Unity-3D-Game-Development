@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class ScalableObject : MonoBehaviour {
 
-    public Vector3 newScale;
-
-    private void Start()
-    {
-        newScale = transform.localScale;
-    }
-
     /// <summary>
     /// Change scale of gameObject. The parameter makes bigger or smaller. Default is make it bigger.
     /// </summary>
@@ -19,10 +12,10 @@ public class ScalableObject : MonoBehaviour {
     {
         Vector3 currentScale = transform.localScale;
 
-        transform.localScale = new Vector3(
-            currentScale.x + newScale.x * 0.5f * oppositeScale, 
-            currentScale.y + newScale.y * 0.5f * oppositeScale, 
-            currentScale.z + newScale.z * 0.5f * oppositeScale);
+        transform.localScale += new Vector3(
+            currentScale.x * 0.5f * oppositeScale, 
+            currentScale.y * 0.5f * oppositeScale, 
+            currentScale.z * 0.5f * oppositeScale);
 
         if (transform.localScale.magnitude <= 1)
             transform.localScale = currentScale;
