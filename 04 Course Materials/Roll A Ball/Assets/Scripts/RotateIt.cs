@@ -1,0 +1,31 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class RotateIt : MonoBehaviour {
+
+    public float speed = 25f;
+    public float randomMax = 50f;
+    public float randomMin = 25f;
+
+    void Start()
+    {
+        SetRandomness();   
+    }
+
+    void Update()
+    {
+        Rotate();    
+    }
+
+    void SetRandomness()
+    {
+        speed = Random.Range(randomMin, randomMax);
+    }
+
+    void Rotate()
+    {
+        Vector3 direction = Vector3.forward;
+        transform.Rotate(direction * speed * Time.deltaTime);
+    }
+}
